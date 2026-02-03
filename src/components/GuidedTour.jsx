@@ -1,80 +1,156 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, ChevronRight, ChevronLeft, HelpCircle } from 'lucide-react'
 
 const STEPS = [
   {
-    target: '[data-tour="sidebar"]',
-    title: 'Navigation',
-    body: 'Switch between the ROI Builder to create reports, and the Report Library to browse saved analyses.',
-    position: 'right',
+    target: '[data-tour="step-indicator"]',
+    title: 'Progress Tracker',
+    body: 'Follow these 5 steps to build a compelling ROI report. Each step builds on the last.',
+    preferPosition: 'bottom',
   },
   {
     target: '[data-tour="wizard"]',
     title: 'ROI Builder',
-    body: 'Walk through 5 simple steps to build a professional ROI report. Start with the prospect profile, select use cases, quantify their pain, choose assumptions, then generate.',
-    position: 'bottom',
+    body: 'This is your workspace. Enter prospect details, select use cases, quantify pain, choose assumptions, then generate a professional report.',
+    preferPosition: 'bottom',
+    targetInset: true, // only highlight the top portion
   },
   {
-    target: '[data-tour="step-indicator"]',
-    title: 'Progress Tracker',
-    body: 'See exactly where you are in the wizard. Each step builds on the last to create a compelling business case.',
-    position: 'bottom',
+    target: '[data-tour="sidebar"]',
+    title: 'Navigation',
+    body: 'Switch between the ROI Builder and the Report Library. On mobile, tap the hamburger menu to access this.',
+    preferPosition: 'right',
+    mobileTarget: '[data-tour="step-indicator"]', // fallback on mobile
   },
   {
     target: '[data-tour="user-badge"]',
     title: 'Your Profile',
-    body: 'Reports are automatically attributed to you. Share them directly with prospects or export as PDF.',
-    position: 'right',
+    body: 'Reports are attributed to you automatically. Share them with prospects or export as PDF.',
+    preferPosition: 'top',
+    mobileTarget: '[data-tour="step-indicator"]',
   },
 ]
 
-function getRect(selector) {
-  const el = document.querySelector(selector)
-  if (!el) return null
-  return el.getBoundingClientRect()
+const TOOLTIP_W = 300
+const TOOLTIP_H_EST = 180
+const PAD = 12
+
+function clamp(val, min, max) {
+  return Math.max(min, Math.min(max, val))
+}
+
+function computePosition(rect, preferPosition, vw, vh) {
+  if (!rect) return { top: vh / 2 - 90, left: vw / 2 - TOOLTIP_W / 2 }
+
+  const isMobile = vw < 768
+
+  // On mobile, always position at bottom of target or center-bottom of screen
+  if (isMobile) {
+    const top = Math.min(rect.bottom + PAD, vh - TOOLTIP_H_EST - PAD)
+    const left = clamp(rect.left + rect.width / 2 - TOOLTIP_W / 2, PAD, vw - TOOLTIP_W - PAD)
+    return { top, left }
+  }
+
+  // Desktop: try preferred position, fall back if overflows
+  const positions = {
+    bottom: {
+      top: rect.bottom + PAD,
+      left: clamp(rect.left + rect.width / 2 - TOOLTIP_W / 2, PAD, vw - TOOLTIP_W - PAD),
+    },
+    top: {
+      top: rect.top - TOOLTIP_H_EST - PAD,
+      left: clamp(rect.left + rect.width / 2 - TOOLTIP_W / 2, PAD, vw - TOOLTIP_W - PAD),
+    },
+    right: {
+      top: clamp(rect.top + rect.height / 2 - 80, PAD, vh - TOOLTIP_H_EST - PAD),
+      left: Math.min(rect.right + PAD, vw - TOOLTIP_W - PAD),
+    },
+    left: {
+      top: clamp(rect.top + rect.height / 2 - 80, PAD, vh - TOOLTIP_H_EST - PAD),
+      left: Math.max(rect.left - TOOLTIP_W - PAD, PAD),
+    },
+  }
+
+  const pos = positions[preferPosition] || positions.bottom
+
+  // Verify it's in viewport, otherwise fallback to bottom
+  if (pos.top < PAD || pos.top + TOOLTIP_H_EST > vh - PAD) {
+    return positions.bottom
+  }
+  return pos
 }
 
 function Tooltip({ step, currentStep, total, onNext, onPrev, onClose }) {
-  const rect = getRect(step.target)
-  if (!rect) return null
+  const [pos, setPos] = useState(null)
+  const [spotRect, setSpotRect] = useState(null)
 
-  const pad = 12
-  let style = {}
-  const pos = step.position
+  const measure = useCallback(() => {
+    const isMobile = window.innerWidth < 1024
+    const targetSelector = isMobile && step.mobileTarget ? step.mobileTarget : step.target
+    const el = document.querySelector(targetSelector)
+    if (!el) {
+      // No target found — center tooltip
+      setSpotRect(null)
+      setPos({ top: window.innerHeight / 2 - 90, left: window.innerWidth / 2 - TOOLTIP_W / 2 })
+      return
+    }
+    const rect = el.getBoundingClientRect()
 
-  if (pos === 'right') {
-    style = { top: rect.top + rect.height / 2 - 60, left: rect.right + pad }
-  } else if (pos === 'bottom') {
-    style = { top: rect.bottom + pad, left: rect.left + rect.width / 2 - 160 }
-  } else if (pos === 'left') {
-    style = { top: rect.top + rect.height / 2 - 60, right: window.innerWidth - rect.left + pad }
-  } else {
-    style = { bottom: window.innerHeight - rect.top + pad, left: rect.left + rect.width / 2 - 160 }
-  }
+    // For large elements, only spotlight the top 120px
+    const displayRect = step.targetInset
+      ? { top: rect.top, left: rect.left, width: rect.width, height: Math.min(rect.height, 120), bottom: rect.top + Math.min(rect.height, 120), right: rect.right }
+      : rect
+
+    setSpotRect(displayRect)
+    setPos(computePosition(displayRect, step.preferPosition, window.innerWidth, window.innerHeight))
+  }, [step])
+
+  useEffect(() => {
+    measure()
+    const onResize = () => measure()
+    window.addEventListener('resize', onResize)
+    window.addEventListener('scroll', onResize, true)
+    return () => {
+      window.removeEventListener('resize', onResize)
+      window.removeEventListener('scroll', onResize, true)
+    }
+  }, [measure])
+
+  if (!pos) return null
 
   return (
     <>
-      {/* Spotlight */}
-      <div
-        className="fixed rounded-xl ring-4 ring-[#89F4EA]/40 pointer-events-none z-[60] transition-all duration-300"
-        style={{
-          top: rect.top - 4,
-          left: rect.left - 4,
-          width: rect.width + 8,
-          height: rect.height + 8,
-          boxShadow: '0 0 0 9999px rgba(0,0,0,0.35)',
-        }}
-      />
-      {/* Tooltip card */}
+      {/* Backdrop */}
+      <div className="fixed inset-0 z-[60] pointer-events-auto" onClick={onClose}>
+        {/* Dark overlay with cutout via clip-path or box-shadow */}
+        <div className="absolute inset-0 bg-black/35" />
+      </div>
+
+      {/* Spotlight cutout */}
+      {spotRect && (
+        <div
+          className="fixed rounded-xl ring-4 ring-[#89F4EA]/40 pointer-events-none z-[61] transition-all duration-300"
+          style={{
+            top: spotRect.top - 4,
+            left: spotRect.left - 4,
+            width: spotRect.width + 8,
+            height: spotRect.height + 8,
+            backgroundColor: 'transparent',
+          }}
+        />
+      )}
+
+      {/* Tooltip */}
       <motion.div
         key={currentStep}
-        initial={{ opacity: 0, y: 6 }}
+        initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 6 }}
+        exit={{ opacity: 0, y: 8 }}
         transition={{ duration: 0.2 }}
-        className="fixed z-[70] w-80 bg-white rounded-xl shadow-2xl border border-zinc-200 overflow-hidden"
-        style={style}
+        className="fixed z-[70] bg-white rounded-xl shadow-2xl border border-zinc-200 overflow-hidden pointer-events-auto"
+        style={{ top: pos.top, left: pos.left, width: TOOLTIP_W }}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="h-1 bg-gradient-to-r from-[#0D9488] to-[#89F4EA]" />
         <div className="p-4">
@@ -125,8 +201,7 @@ export default function GuidedTour({ active, onClose }) {
   useEffect(() => {
     if (active) {
       setStep(0)
-      // Small delay to let DOM settle
-      const t = setTimeout(() => setReady(true), 200)
+      const t = setTimeout(() => setReady(true), 250)
       return () => clearTimeout(t)
     } else {
       setReady(false)
@@ -136,8 +211,9 @@ export default function GuidedTour({ active, onClose }) {
   if (!active || !ready) return null
 
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       <Tooltip
+        key={step}
         step={STEPS[step]}
         currentStep={step}
         total={STEPS.length}
