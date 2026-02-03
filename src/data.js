@@ -6,7 +6,7 @@ export const USE_CASES = [
     defaultTimeSaved: 8,
     defaultRevImpact: 3,
     defaultChurnReduction: 0,
-    icon: '🎯',
+    icon: 'Crosshair',
   },
   {
     id: 'customer_360',
@@ -15,7 +15,7 @@ export const USE_CASES = [
     defaultTimeSaved: 6,
     defaultRevImpact: 5,
     defaultChurnReduction: 0,
-    icon: '👤',
+    icon: 'Users',
   },
   {
     id: 'audience_sync',
@@ -24,7 +24,7 @@ export const USE_CASES = [
     defaultTimeSaved: 10,
     defaultRevImpact: 4,
     defaultChurnReduction: 0,
-    icon: '📢',
+    icon: 'Megaphone',
   },
   {
     id: 'plg_signals',
@@ -33,7 +33,7 @@ export const USE_CASES = [
     defaultTimeSaved: 4,
     defaultRevImpact: 6,
     defaultChurnReduction: 0,
-    icon: '🚀',
+    icon: 'Rocket',
   },
   {
     id: 'health_scoring',
@@ -42,7 +42,7 @@ export const USE_CASES = [
     defaultTimeSaved: 5,
     defaultRevImpact: 0,
     defaultChurnReduction: 10,
-    icon: '💚',
+    icon: 'HeartPulse',
   },
   {
     id: 'rev_ops',
@@ -51,7 +51,7 @@ export const USE_CASES = [
     defaultTimeSaved: 15,
     defaultRevImpact: 2,
     defaultChurnReduction: 0,
-    icon: '⚙️',
+    icon: 'Settings',
   },
 ]
 

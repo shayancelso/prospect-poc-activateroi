@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Download, Share2, TrendingUp, Clock, DollarSign, Shield } from 'lucide-react'
+import { ArrowLeft, Download, Share2, TrendingUp, Clock, DollarSign, Shield, Crosshair, Users, Megaphone, Rocket, HeartPulse, Settings } from 'lucide-react'
+
+const ICON_MAP = { Crosshair, Users, Megaphone, Rocket, HeartPulse, Settings }
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts'
 
 function AnimatedNumber({ value, prefix = '', suffix = '', decimals = 0 }) {
@@ -221,7 +223,7 @@ export default function ROIReport({ data, onBack }) {
                   className="rounded-xl border border-zinc-200 p-4 hover:shadow-sm transition-shadow"
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-lg">{uc.icon}</span>
+                    {(() => { const Icon = ICON_MAP[uc.icon]; return Icon ? <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center"><Icon className="w-4 h-4 text-indigo-500" /></div> : null })()}
                     <p className="text-sm font-medium text-zinc-900">{uc.label}</p>
                   </div>
                   <p className="text-xs text-zinc-500 leading-relaxed">{uc.description}</p>

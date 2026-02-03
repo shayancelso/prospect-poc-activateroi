@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Check, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
+import { Check, ChevronLeft, ChevronRight, Sparkles, Crosshair, Users, Megaphone, Rocket, HeartPulse, Settings } from 'lucide-react'
 import { USE_CASES, INDUSTRIES, WAREHOUSES, CURRENT_STATES, COMPANY_SIZES, INDUSTRY_BENCHMARKS } from '../data'
+
+const ICON_MAP = { Crosshair, Users, Megaphone, Rocket, HeartPulse, Settings }
 
 const STEPS = [
   { label: 'Prospect Profile' },
@@ -233,7 +235,8 @@ function StepUseCases({ selectedCases, toggleCase }) {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-zinc-900 flex items-center gap-2">
-                    <span>{uc.icon}</span> {uc.label}
+                    {(() => { const Icon = ICON_MAP[uc.icon]; return Icon ? <Icon className="w-4 h-4 text-indigo-500" /> : null })()}
+                    {uc.label}
                   </p>
                   <p className="text-xs text-zinc-500 mt-1 leading-relaxed">{uc.description}</p>
                 </div>
@@ -366,7 +369,8 @@ function StepReview({ profile, selectedCases, pain, scenario, computeROI }) {
         <div className="flex flex-wrap gap-2">
           {cases.map((c) => (
             <span key={c.id} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-200">
-              {c.icon} {c.label}
+              {(() => { const Icon = ICON_MAP[c.icon]; return Icon ? <Icon className="w-3.5 h-3.5" /> : null })()}
+              {c.label}
             </span>
           ))}
         </div>
