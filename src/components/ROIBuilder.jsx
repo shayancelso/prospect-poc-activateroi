@@ -6,9 +6,9 @@ import { USE_CASES, INDUSTRIES, WAREHOUSES, CURRENT_STATES, COMPANY_SIZES, INDUS
 const ICON_MAP = { Crosshair, Users, Megaphone, Rocket, HeartPulse, Settings }
 
 const STEPS = [
-  { label: 'Prospect Profile' },
+  { label: 'Profile' },
   { label: 'Use Cases' },
-  { label: 'Quantify Pain' },
+  { label: 'Quantify' },
   { label: 'Assumptions' },
   { label: 'Generate' },
 ]
@@ -79,54 +79,62 @@ export default function ROIBuilder({ onGenerate }) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div data-tour="wizard" className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className="h-16 px-8 flex items-center justify-between border-b border-zinc-100 bg-white/80 backdrop-blur-sm sticky top-0 z-10">
-        <div className="flex items-center gap-2 text-sm text-zinc-500">
+      <header className="h-14 px-8 flex items-center justify-between border-b border-zinc-100 bg-white/80 backdrop-blur-sm sticky top-0 z-10">
+        <div className="flex items-center gap-2 text-sm text-zinc-400">
           <span>ROI Builder</span>
           <ChevronRight className="w-3 h-3" />
           <span className="text-zinc-900 font-medium">{STEPS[step].label}</span>
         </div>
+        <div className="flex items-center gap-2 text-xs text-zinc-400">
+          <div className="w-1.5 h-1.5 rounded-full bg-[#89F4EA] animate-pulse" />
+          Autosaved
+        </div>
       </header>
 
       {/* Step indicator */}
-      <div className="flex items-center justify-center gap-2 py-8 bg-white border-b border-zinc-50">
+      <div data-tour="step-indicator" className="flex items-center justify-center gap-1.5 py-7 bg-white border-b border-zinc-50">
         {STEPS.map((s, i) => (
-          <div key={i} className="flex items-center gap-2">
-            <div className="flex items-center gap-2">
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-300 ${
+          <div key={i} className="flex items-center gap-1.5">
+            <button
+              onClick={() => i < step && setStep(i)}
+              className="flex items-center gap-2"
+            >
+              <motion.div
+                layout
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-300 ${
                   i < step
-                    ? 'bg-indigo-500 text-white'
+                    ? 'bg-gradient-to-br from-[#0D9488] to-[#89F4EA] text-white shadow-md shadow-teal-200/30'
                     : i === step
-                    ? 'bg-indigo-500 text-white ring-4 ring-indigo-100'
+                    ? 'bg-gradient-to-br from-[#0D9488] to-[#89F4EA] text-white ring-[3px] ring-[#89F4EA]/20 shadow-md shadow-teal-200/30'
                     : 'bg-zinc-100 text-zinc-400'
                 }`}
               >
                 {i < step ? <Check className="w-4 h-4" /> : i + 1}
-              </div>
-              <span className={`text-sm hidden sm:block ${i <= step ? 'text-zinc-900 font-medium' : 'text-zinc-400'}`}>
+              </motion.div>
+              <span className={`text-xs font-medium hidden sm:block transition-colors ${i <= step ? 'text-zinc-900' : 'text-zinc-400'}`}>
                 {s.label}
               </span>
-            </div>
+            </button>
             {i < STEPS.length - 1 && (
-              <div className={`w-8 lg:w-12 h-0.5 mx-1 transition-colors duration-300 ${i < step ? 'bg-indigo-500' : 'bg-zinc-200'}`} />
+              <div className={`w-6 lg:w-10 h-0.5 mx-1 rounded-full transition-all duration-500 ${i < step ? 'bg-gradient-to-r from-[#0D9488] to-[#89F4EA]' : 'bg-zinc-200'}`} />
             )}
           </div>
         ))}
       </div>
 
       {/* Content */}
-      <div className="flex-1 flex items-start justify-center px-4 py-10">
+      <div className="flex-1 flex items-start justify-center px-4 py-8">
         <div className="w-full max-w-2xl">
           <AnimatePresence mode="wait">
             <motion.div
               key={step}
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: 24 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.2 }}
-              className="bg-white rounded-2xl border border-zinc-200 p-8 shadow-sm"
+              exit={{ opacity: 0, x: -24 }}
+              transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="bg-white rounded-2xl border border-zinc-200/80 p-8 shadow-sm hover:shadow-md transition-shadow duration-300"
             >
               {step === 0 && <StepProfile profile={profile} setProfile={setProfile} />}
               {step === 1 && <StepUseCases selectedCases={selectedCases} toggleCase={toggleCase} />}
@@ -140,8 +148,8 @@ export default function ROIBuilder({ onGenerate }) {
           <div className="flex items-center justify-between mt-6">
             <button
               onClick={() => setStep((s) => Math.max(0, s - 1))}
-              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-150 ${
-                step === 0 ? 'invisible' : 'text-zinc-600 hover:bg-zinc-100'
+              className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-150 ${
+                step === 0 ? 'invisible' : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700'
               }`}
             >
               <ChevronLeft className="w-4 h-4" /> Back
@@ -150,14 +158,14 @@ export default function ROIBuilder({ onGenerate }) {
               <button
                 onClick={() => setStep((s) => Math.min(4, s + 1))}
                 disabled={!canNext()}
-                className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 active:scale-[0.98] transition-all duration-150 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-6 py-2.5 text-sm font-semibold rounded-xl bg-zinc-900 text-white hover:bg-zinc-800 active:scale-[0.98] transition-all duration-150 shadow-sm disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 Continue <ChevronRight className="w-4 h-4" />
               </button>
             ) : (
               <button
                 onClick={handleGenerate}
-                className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-lg bg-indigo-500 text-white hover:bg-indigo-600 active:scale-[0.98] transition-all duration-150 shadow-sm"
+                className="flex items-center gap-2 px-6 py-2.5 text-sm font-semibold rounded-xl bg-gradient-to-r from-[#0D9488] to-[#10B981] text-white hover:shadow-lg hover:shadow-teal-200/40 active:scale-[0.98] transition-all duration-150"
               >
                 <Sparkles className="w-4 h-4" /> Generate ROI Report
               </button>
@@ -174,7 +182,7 @@ function StepProfile({ profile, setProfile }) {
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-lg font-semibold text-zinc-900 tracking-tight">Prospect Profile</h2>
+        <h2 className="text-lg font-bold text-zinc-900 tracking-tight">Prospect Profile</h2>
         <p className="text-sm text-zinc-500 mt-1">Tell us about the company you're building this ROI report for.</p>
       </div>
       <Field label="Company Name">
@@ -182,7 +190,7 @@ function StepProfile({ profile, setProfile }) {
           value={profile.company}
           onChange={(e) => set('company', e.target.value)}
           placeholder="e.g. Acme Corp"
-          className="w-full rounded-lg border border-zinc-200 h-10 px-3 text-sm placeholder:text-zinc-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 outline-none transition-all"
+          className="w-full rounded-xl border border-zinc-200 h-11 px-4 text-sm placeholder:text-zinc-400 focus:border-[#89F4EA] focus:ring-2 focus:ring-[#89F4EA]/20 outline-none transition-all"
         />
       </Field>
       <div className="grid grid-cols-2 gap-4">
@@ -209,39 +217,41 @@ function StepUseCases({ selectedCases, toggleCase }) {
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-lg font-semibold text-zinc-900 tracking-tight">Select Use Cases</h2>
+        <h2 className="text-lg font-bold text-zinc-900 tracking-tight">Select Use Cases</h2>
         <p className="text-sm text-zinc-500 mt-1">Which data activation use cases apply to this prospect?</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {USE_CASES.map((uc) => {
           const sel = selectedCases.includes(uc.id)
+          const Icon = ICON_MAP[uc.icon]
           return (
-            <button
+            <motion.button
               key={uc.id}
               onClick={() => toggleCase(uc.id)}
+              whileTap={{ scale: 0.98 }}
               className={`text-left rounded-xl border-2 p-4 transition-all duration-200 ${
                 sel
-                  ? 'border-indigo-500 bg-indigo-50/40 shadow-sm'
+                  ? 'border-[#0D9488] bg-gradient-to-br from-[#89F4EA]/10 to-[#89F4EA]/5 shadow-sm shadow-teal-100/30'
                   : 'border-zinc-200 hover:border-zinc-300 hover:shadow-sm'
               }`}
             >
               <div className="flex items-start gap-3">
                 <div
-                  className={`w-5 h-5 rounded-md border-2 flex items-center justify-center mt-0.5 transition-all ${
-                    sel ? 'bg-indigo-500 border-indigo-500' : 'border-zinc-300'
+                  className={`w-5 h-5 rounded-md border-2 flex items-center justify-center mt-0.5 shrink-0 transition-all ${
+                    sel ? 'bg-gradient-to-br from-[#0D9488] to-[#89F4EA] border-transparent' : 'border-zinc-300'
                   }`}
                 >
                   {sel && <Check className="w-3 h-3 text-white" />}
                 </div>
                 <div>
                   <p className="text-sm font-medium text-zinc-900 flex items-center gap-2">
-                    {(() => { const Icon = ICON_MAP[uc.icon]; return Icon ? <Icon className="w-4 h-4 text-indigo-500" /> : null })()}
+                    {Icon && <Icon className={`w-4 h-4 ${sel ? 'text-[#0D9488]' : 'text-zinc-400'}`} />}
                     {uc.label}
                   </p>
                   <p className="text-xs text-zinc-500 mt-1 leading-relaxed">{uc.description}</p>
                 </div>
               </div>
-            </button>
+            </motion.button>
           )
         })}
       </div>
@@ -254,20 +264,20 @@ function StepPain({ pain, setPain }) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-zinc-900 tracking-tight">Quantify Current Pain</h2>
+        <h2 className="text-lg font-bold text-zinc-900 tracking-tight">Quantify Current Pain</h2>
         <p className="text-sm text-zinc-500 mt-1">Help us understand the cost of the status quo.</p>
       </div>
       <Slider label="Hours per week on manual data exports" value={pain.hoursPerWeek} onChange={(v) => set('hoursPerWeek', v)} min={1} max={40} suffix=" hrs" />
       <Slider label="People involved in manual processes" value={pain.peopleInvolved} onChange={(v) => set('peopleInvolved', v)} min={1} max={20} suffix="" />
-      <Field label="Average hourly cost of these people">
+      <Field label="Average hourly cost">
         <div className="flex gap-2">
           {[50, 75, 100, 125, 150].map((v) => (
             <button
               key={v}
               onClick={() => set('hourlyCost', v)}
-              className={`px-3 py-2 rounded-lg text-sm font-medium border transition-all ${
+              className={`flex-1 px-3 py-2.5 rounded-xl text-sm font-medium border-2 transition-all ${
                 pain.hourlyCost === v
-                  ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                  ? 'border-[#0D9488] bg-[#89F4EA]/10 text-[#065F56]'
                   : 'border-zinc-200 text-zinc-600 hover:border-zinc-300'
               }`}
             >
@@ -276,15 +286,15 @@ function StepPain({ pain, setPain }) {
           ))}
         </div>
       </Field>
-      <Field label="How often do data quality issues cause problems?">
+      <Field label="Data quality issue frequency">
         <div className="flex gap-2">
           {['Daily', 'Weekly', 'Monthly', 'Rarely'].map((v) => (
             <button
               key={v}
               onClick={() => set('dataIssueFrequency', v)}
-              className={`px-3 py-2 rounded-lg text-sm font-medium border transition-all ${
+              className={`flex-1 px-3 py-2.5 rounded-xl text-sm font-medium border-2 transition-all ${
                 pain.dataIssueFrequency === v
-                  ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                  ? 'border-[#0D9488] bg-[#89F4EA]/10 text-[#065F56]'
                   : 'border-zinc-200 text-zinc-600 hover:border-zinc-300'
               }`}
             >
@@ -294,7 +304,7 @@ function StepPain({ pain, setPain }) {
         </div>
       </Field>
       <Slider
-        label="Estimated annual revenue lost due to stale/missing data"
+        label="Est. annual revenue lost due to stale/missing data"
         value={pain.revenueLost}
         onChange={(v) => set('revenueLost', v)}
         min={10000}
@@ -309,33 +319,37 @@ function StepPain({ pain, setPain }) {
 
 function StepAssumptions({ scenario, setScenario, computeROI }) {
   const scenarios = [
-    { key: 'conservative', label: 'Conservative', color: 'zinc' },
-    { key: 'moderate', label: 'Moderate', color: 'indigo' },
-    { key: 'aggressive', label: 'Aggressive', color: 'emerald' },
+    { key: 'conservative', label: 'Conservative', desc: 'Cautious estimates, lower risk' },
+    { key: 'moderate', label: 'Moderate', desc: 'Balanced, most likely outcome' },
+    { key: 'aggressive', label: 'Aggressive', desc: 'Optimistic, high confidence' },
   ]
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-zinc-900 tracking-tight">Value Assumptions</h2>
-        <p className="text-sm text-zinc-500 mt-1">Choose a scenario based on how confident you are in the value projections.</p>
+        <h2 className="text-lg font-bold text-zinc-900 tracking-tight">Value Assumptions</h2>
+        <p className="text-sm text-zinc-500 mt-1">Choose a scenario based on your confidence in the value projections.</p>
       </div>
       <div className="grid grid-cols-3 gap-4">
         {scenarios.map((s) => {
           const roi = computeROI(s.key)
           const sel = scenario === s.key
           return (
-            <button
+            <motion.button
               key={s.key}
               onClick={() => setScenario(s.key)}
+              whileTap={{ scale: 0.97 }}
               className={`rounded-xl border-2 p-5 text-center transition-all duration-200 ${
-                sel ? 'border-indigo-500 bg-indigo-50/30 shadow-sm' : 'border-zinc-200 hover:border-zinc-300'
+                sel
+                  ? 'border-[#0D9488] bg-gradient-to-b from-[#89F4EA]/10 to-transparent shadow-md shadow-teal-100/30'
+                  : 'border-zinc-200 hover:border-zinc-300 hover:shadow-sm'
               }`}
             >
-              <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">{s.label}</p>
-              <p className="text-2xl font-bold text-zinc-900 mt-2 tabular-nums">{roi.roiRatio.toFixed(1)}:1</p>
-              <p className="text-xs text-zinc-500 mt-1">${(roi.totalValue / 1000).toFixed(0)}K/yr value</p>
-              <p className="text-xs text-zinc-400 mt-0.5">Day {roi.paybackDays} payback</p>
-            </button>
+              <p className={`text-xs font-semibold uppercase tracking-wider ${sel ? 'text-[#0D9488]' : 'text-zinc-400'}`}>{s.label}</p>
+              <p className="text-3xl font-extrabold text-zinc-900 mt-2 tabular-nums">{roi.roiRatio.toFixed(1)}<span className="text-lg text-zinc-400">:1</span></p>
+              <p className="text-xs text-zinc-500 mt-1">${(roi.totalValue / 1000).toFixed(0)}K/yr</p>
+              <p className="text-[11px] text-zinc-400 mt-0.5">Day {roi.paybackDays} payback</p>
+              <p className="text-[10px] text-zinc-400 mt-2">{s.desc}</p>
+            </motion.button>
           )
         })}
       </div>
@@ -347,47 +361,51 @@ function StepReview({ profile, selectedCases, pain, scenario, computeROI }) {
   const roi = computeROI(scenario)
   const cases = selectedCases.map((id) => USE_CASES.find((u) => u.id === id))
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <div>
-        <h2 className="text-lg font-semibold text-zinc-900 tracking-tight">Review & Generate</h2>
-        <p className="text-sm text-zinc-500 mt-1">Confirm the details below, then generate your professional ROI report.</p>
+        <h2 className="text-lg font-bold text-zinc-900 tracking-tight">Review & Generate</h2>
+        <p className="text-sm text-zinc-500 mt-1">Confirm the details below, then generate your report.</p>
       </div>
-      <div className="grid grid-cols-2 gap-4 text-sm">
-        <div className="bg-zinc-50 rounded-lg p-4 space-y-2">
-          <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Company</p>
-          <p className="font-medium text-zinc-900">{profile.company}</p>
-          <p className="text-zinc-500">{profile.industry} • {profile.size} employees</p>
+      <div className="grid grid-cols-2 gap-3 text-sm">
+        <div className="rounded-xl bg-zinc-50 border border-zinc-100 p-4 space-y-1.5">
+          <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">Company</p>
+          <p className="font-semibold text-zinc-900">{profile.company}</p>
+          <p className="text-zinc-500 text-xs">{profile.industry} · {profile.size} employees</p>
         </div>
-        <div className="bg-zinc-50 rounded-lg p-4 space-y-2">
-          <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Infrastructure</p>
-          <p className="font-medium text-zinc-900">{profile.warehouse}</p>
-          <p className="text-zinc-500">{profile.currentState}</p>
+        <div className="rounded-xl bg-zinc-50 border border-zinc-100 p-4 space-y-1.5">
+          <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">Infrastructure</p>
+          <p className="font-semibold text-zinc-900">{profile.warehouse}</p>
+          <p className="text-zinc-500 text-xs">{profile.currentState}</p>
         </div>
       </div>
-      <div className="bg-zinc-50 rounded-lg p-4">
-        <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-2">Use Cases ({cases.length})</p>
+      <div className="rounded-xl bg-zinc-50 border border-zinc-100 p-4">
+        <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-2.5">Use Cases ({cases.length})</p>
         <div className="flex flex-wrap gap-2">
-          {cases.map((c) => (
-            <span key={c.id} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-200">
-              {(() => { const Icon = ICON_MAP[c.icon]; return Icon ? <Icon className="w-3.5 h-3.5" /> : null })()}
-              {c.label}
-            </span>
-          ))}
+          {cases.map((c) => {
+            const Icon = ICON_MAP[c.icon]
+            return (
+              <span key={c.id} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-[#065F56] border border-[#89F4EA]/30 shadow-sm">
+                {Icon && <Icon className="w-3 h-3" />}
+                {c.label}
+              </span>
+            )
+          })}
         </div>
       </div>
-      <div className="bg-indigo-50/50 rounded-lg p-4 border border-indigo-100">
+      {/* Hero ROI preview */}
+      <div className="rounded-xl bg-gradient-to-r from-[#0D9488] to-[#10B981] p-5 text-white">
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
-            <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Total Value</p>
-            <p className="text-xl font-bold text-zinc-900 tabular-nums mt-1">${(roi.totalValue / 1000).toFixed(0)}K</p>
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-white/60">Total Value</p>
+            <p className="text-2xl font-extrabold tabular-nums mt-1">${(roi.totalValue / 1000).toFixed(0)}K</p>
           </div>
           <div>
-            <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">ROI Ratio</p>
-            <p className="text-xl font-bold text-indigo-600 tabular-nums mt-1">{roi.roiRatio.toFixed(1)}:1</p>
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-white/60">ROI Ratio</p>
+            <p className="text-2xl font-extrabold tabular-nums mt-1">{roi.roiRatio.toFixed(1)}:1</p>
           </div>
           <div>
-            <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Payback</p>
-            <p className="text-xl font-bold text-zinc-900 tabular-nums mt-1">Day {roi.paybackDays}</p>
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-white/60">Payback</p>
+            <p className="text-2xl font-extrabold tabular-nums mt-1">Day {roi.paybackDays}</p>
           </div>
         </div>
       </div>
@@ -398,7 +416,7 @@ function StepReview({ profile, selectedCases, pain, scenario, computeROI }) {
 // Shared components
 function Field({ label, children }) {
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-2">
       <label className="text-sm font-medium text-zinc-700">{label}</label>
       {children}
     </div>
@@ -410,7 +428,7 @@ function Select({ value, onChange, options }) {
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full rounded-lg border border-zinc-200 h-10 px-3 text-sm bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 outline-none transition-all appearance-none"
+      className="w-full rounded-xl border border-zinc-200 h-11 px-4 text-sm bg-white focus:border-[#89F4EA] focus:ring-2 focus:ring-[#89F4EA]/20 outline-none transition-all appearance-none cursor-pointer"
     >
       {options.map((o) => (
         <option key={o} value={o}>{o}</option>
@@ -421,23 +439,31 @@ function Select({ value, onChange, options }) {
 
 function Slider({ label, value, onChange, min, max, step = 1, prefix = '', suffix = '', format }) {
   const display = format ? format(value) : value
+  const pct = ((value - min) / (max - min)) * 100
   return (
-    <div className="space-y-2">
-      <div className="flex justify-between">
+    <div className="space-y-3">
+      <div className="flex justify-between items-baseline">
         <label className="text-sm font-medium text-zinc-700">{label}</label>
-        <span className="text-sm font-semibold text-indigo-600 tabular-nums">
+        <span className="text-sm font-bold text-[#0D9488] tabular-nums">
           {prefix}{display}{suffix}
         </span>
       </div>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full h-2 bg-zinc-200 rounded-full appearance-none cursor-pointer accent-indigo-500 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-indigo-500 [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer"
-      />
+      <div className="relative">
+        <div className="absolute top-1/2 -translate-y-1/2 left-0 h-1.5 rounded-full bg-zinc-200 w-full" />
+        <div
+          className="absolute top-1/2 -translate-y-1/2 left-0 h-1.5 rounded-full bg-gradient-to-r from-[#0D9488] to-[#89F4EA]"
+          style={{ width: `${pct}%` }}
+        />
+        <input
+          type="range"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className="relative w-full h-6 bg-transparent z-10 cursor-pointer"
+        />
+      </div>
       <div className="flex justify-between text-[10px] text-zinc-400">
         <span>{prefix}{format ? format(min) : min}{suffix}</span>
         <span>{prefix}{format ? format(max) : max}{suffix}</span>
