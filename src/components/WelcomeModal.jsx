@@ -26,7 +26,7 @@ export default function WelcomeModal({ open, onClose, onStartTour }) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-            className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden"
+            className="relative w-full max-w-lg mx-4 bg-white rounded-2xl shadow-2xl overflow-hidden"
           >
             {/* Top gradient bar */}
             <div className="h-1.5 bg-gradient-to-r from-[#0D9488] via-[#89F4EA] to-[#0D9488]" />
@@ -40,7 +40,7 @@ export default function WelcomeModal({ open, onClose, onStartTour }) {
             </button>
 
             {/* Content */}
-            <div className="px-8 pt-7 pb-2">
+            <div className="px-5 sm:px-8 pt-6 sm:pt-7 pb-2">
               {/* Icon cluster */}
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#0D9488] to-[#89F4EA] flex items-center justify-center shadow-lg shadow-teal-200/40">
@@ -80,23 +80,23 @@ export default function WelcomeModal({ open, onClose, onStartTour }) {
             </div>
 
             {/* Actions */}
-            <div className="px-8 py-5 bg-zinc-50 border-t border-zinc-100 flex items-center justify-between">
+            <div className="px-5 sm:px-8 py-4 sm:py-5 bg-zinc-50 border-t border-zinc-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
               <button
                 onClick={onClose}
                 className="text-sm text-zinc-500 hover:text-zinc-700 font-medium transition-colors"
               >
                 Skip for now
               </button>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 justify-end">
                 <button
                   onClick={() => { onClose(); onStartTour?.() }}
-                  className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl border border-zinc-200 text-zinc-700 hover:bg-white hover:border-zinc-300 transition-all"
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl border border-zinc-200 text-zinc-700 hover:bg-white hover:border-zinc-300 transition-all"
                 >
                   Take a tour
                 </button>
                 <button
                   onClick={onClose}
-                  className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-xl bg-gradient-to-r from-[#0D9488] to-[#10B981] text-white hover:shadow-lg hover:shadow-teal-200/40 active:scale-[0.98] transition-all"
+                  className="flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 text-sm font-semibold rounded-xl bg-gradient-to-r from-[#0D9488] to-[#10B981] text-white hover:shadow-lg hover:shadow-teal-200/40 active:scale-[0.98] transition-all"
                 >
                   Build my first report <ArrowRight className="w-4 h-4" />
                 </button>

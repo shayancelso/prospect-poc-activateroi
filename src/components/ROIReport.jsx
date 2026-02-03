@@ -48,44 +48,42 @@ export default function ROIReport({ data, onBack }) {
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       {/* Top bar */}
-      <header className="h-14 px-8 flex items-center justify-between border-b border-zinc-100 bg-white/80 backdrop-blur-sm sticky top-0 z-10">
-        <button onClick={onBack} className="flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-900 transition-colors">
-          <ArrowLeft className="w-4 h-4" /> Back to Builder
+      <header className="h-14 px-4 sm:px-8 flex items-center justify-between border-b border-zinc-100 bg-white/80 backdrop-blur-sm sticky top-0 z-10">
+        <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-900 transition-colors">
+          <ArrowLeft className="w-4 h-4" /> <span className="hidden sm:inline">Back to Builder</span>
         </button>
         <div className="flex items-center gap-2">
-          <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl border border-zinc-200 text-zinc-700 hover:bg-zinc-50 transition-all">
-            <Share2 className="w-4 h-4" /> Share
+          <button className="flex items-center gap-1.5 px-3 sm:px-4 py-2 text-sm font-medium rounded-xl border border-zinc-200 text-zinc-700 hover:bg-zinc-50 transition-all">
+            <Share2 className="w-4 h-4" /> <span className="hidden sm:inline">Share</span>
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl bg-zinc-900 text-white hover:bg-zinc-800 transition-all shadow-sm">
-            <Download className="w-4 h-4" /> Export PDF
+          <button className="flex items-center gap-1.5 px-3 sm:px-4 py-2 text-sm font-medium rounded-xl bg-zinc-900 text-white hover:bg-zinc-800 transition-all shadow-sm">
+            <Download className="w-4 h-4" /> <span className="hidden sm:inline">Export PDF</span>
           </button>
         </div>
       </header>
 
-      <div className="max-w-4xl mx-auto py-10 px-4">
+      <div className="max-w-4xl mx-auto py-6 sm:py-10 px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="bg-white rounded-2xl border border-zinc-200/80 shadow-xl shadow-zinc-200/40 overflow-hidden"
         >
-          {/* Report header with Census gradient */}
+          {/* Report header */}
           <div className="relative overflow-hidden">
-            <div className="bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 px-10 py-9 text-white">
-              {/* Decorative circles */}
+            <div className="bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 px-5 sm:px-10 py-7 sm:py-9 text-white">
               <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-[#89F4EA]/5 -translate-y-1/2 translate-x-1/4" />
               <div className="absolute bottom-0 left-20 w-32 h-32 rounded-full bg-[#0D9488]/10 translate-y-1/2" />
-
               <div className="relative">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-[#89F4EA]" />
-                  <p className="text-xs font-semibold text-[#89F4EA] uppercase tracking-widest">Data Activation ROI Analysis</p>
+                  <p className="text-[10px] sm:text-xs font-semibold text-[#89F4EA] uppercase tracking-widest">Data Activation ROI Analysis</p>
                 </div>
-                <h1 className="text-3xl font-extrabold tracking-tight">{company}</h1>
-                <p className="text-sm text-zinc-400 mt-2">Prepared by {aeName} · {today}</p>
-                <div className="flex items-center gap-2 mt-4">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-white/10 text-zinc-300 backdrop-blur-sm">{industry}</span>
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-white/10 text-zinc-300 backdrop-blur-sm">{warehouse}</span>
+                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">{company}</h1>
+                <p className="text-xs sm:text-sm text-zinc-400 mt-2">Prepared by {aeName} · {today}</p>
+                <div className="flex flex-wrap items-center gap-2 mt-4">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-white/10 text-zinc-300">{industry}</span>
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-white/10 text-zinc-300">{warehouse}</span>
                   <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-[#89F4EA]/15 text-[#89F4EA] capitalize">{scenario}</span>
                 </div>
               </div>
@@ -97,25 +95,24 @@ export default function ROIReport({ data, onBack }) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3, duration: 0.5 }}
-            className="px-10 py-10 border-b border-zinc-100 text-center relative"
+            className="px-5 sm:px-10 py-8 sm:py-10 border-b border-zinc-100 text-center relative"
           >
-            {/* Subtle glow */}
             <div className="absolute inset-0 bg-gradient-to-b from-[#89F4EA]/5 to-transparent pointer-events-none" />
             <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest relative">Projected Annual ROI</p>
             <div className="flex items-baseline justify-center gap-2 mt-3 relative">
-              <span className="text-7xl font-black text-gradient-census">
+              <span className="text-5xl sm:text-7xl font-black text-gradient-census">
                 <AnimatedNumber value={roiRatio} decimals={1} />
               </span>
-              <span className="text-3xl font-bold text-zinc-300">: 1</span>
+              <span className="text-2xl sm:text-3xl font-bold text-zinc-300">: 1</span>
             </div>
-            <p className="text-sm text-zinc-500 mt-3 relative">
+            <p className="text-xs sm:text-sm text-zinc-500 mt-3 relative">
               <span className="font-bold text-zinc-700">${totalValue.toLocaleString()}</span> annual value on{' '}
               <span className="font-bold text-zinc-700">${censusCost.toLocaleString()}</span> investment
             </p>
           </motion.div>
 
           {/* Executive summary */}
-          <div className="px-10 py-7 border-b border-zinc-100">
+          <div className="px-5 sm:px-10 py-6 sm:py-7 border-b border-zinc-100">
             <h3 className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-3">Executive Summary</h3>
             <p className="text-sm text-zinc-600 leading-relaxed">
               By implementing Census for data activation, <strong className="text-zinc-800">{company}</strong> is projected to save{' '}
@@ -129,8 +126,8 @@ export default function ROIReport({ data, onBack }) {
           </div>
 
           {/* Financial impact */}
-          <div className="px-10 py-8 border-b border-zinc-100">
-            <h3 className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-6">Financial Impact</h3>
+          <div className="px-5 sm:px-10 py-6 sm:py-8 border-b border-zinc-100">
+            <h3 className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-5">Financial Impact</h3>
             <div className="space-y-3">
               {categories.map((cat, i) => {
                 const Icon = cat.icon
@@ -141,19 +138,19 @@ export default function ROIReport({ data, onBack }) {
                     initial={{ opacity: 0, x: -12 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.4 + i * 0.1, ease: 'easeOut' }}
-                    className="flex items-center justify-between py-3.5 px-5 rounded-xl bg-zinc-50/80 border border-zinc-100 hover:border-zinc-200 hover:shadow-sm transition-all"
+                    className="flex flex-col sm:flex-row sm:items-center justify-between py-3.5 px-4 sm:px-5 rounded-xl bg-zinc-50/80 border border-zinc-100 gap-3"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#0D9488]/10 to-[#89F4EA]/15 flex items-center justify-center">
+                      <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#0D9488]/10 to-[#89F4EA]/15 flex items-center justify-center shrink-0">
                         <Icon className="w-4 h-4 text-[#0D9488]" />
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <p className="text-sm font-semibold text-zinc-900">{cat.label}</p>
-                        <p className="text-xs text-zinc-500">{cat.sub}</p>
+                        <p className="text-xs text-zinc-500 hidden sm:block">{cat.sub}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-5">
-                      <div className="w-28 h-2 bg-zinc-200 rounded-full overflow-hidden">
+                    <div className="flex items-center gap-4 pl-12 sm:pl-0">
+                      <div className="w-24 sm:w-28 h-2 bg-zinc-200 rounded-full overflow-hidden shrink-0">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${pct}%` }}
@@ -161,7 +158,7 @@ export default function ROIReport({ data, onBack }) {
                           className="h-full bg-gradient-to-r from-[#0D9488] to-[#89F4EA] rounded-full"
                         />
                       </div>
-                      <span className="text-sm font-bold text-zinc-900 tabular-nums w-28 text-right">
+                      <span className="text-sm font-bold text-zinc-900 tabular-nums whitespace-nowrap">
                         ${Math.round(cat.value).toLocaleString()}
                       </span>
                     </div>
@@ -169,15 +166,15 @@ export default function ROIReport({ data, onBack }) {
                 )
               })}
               {/* Total */}
-              <div className="flex items-center justify-between py-4 px-5 rounded-xl bg-gradient-to-r from-[#0D9488] to-[#10B981] text-white mt-3">
+              <div className="flex items-center justify-between py-4 px-4 sm:px-5 rounded-xl bg-gradient-to-r from-[#0D9488] to-[#10B981] text-white mt-3">
                 <span className="text-sm font-bold">Total Annual Value</span>
-                <span className="text-xl font-extrabold tabular-nums">${totalValue.toLocaleString()}</span>
+                <span className="text-lg sm:text-xl font-extrabold tabular-nums">${totalValue.toLocaleString()}</span>
               </div>
-              <div className="flex items-center justify-between py-3 px-5 text-sm">
-                <span className="text-zinc-500">Census Annual Investment</span>
+              <div className="flex items-center justify-between py-3 px-4 sm:px-5 text-sm">
+                <span className="text-zinc-500">Census Investment</span>
                 <span className="font-semibold text-zinc-600 tabular-nums">-${censusCost.toLocaleString()}</span>
               </div>
-              <div className="flex items-center justify-between py-3.5 px-5 rounded-xl bg-emerald-50 border border-emerald-200/60">
+              <div className="flex items-center justify-between py-3.5 px-4 sm:px-5 rounded-xl bg-emerald-50 border border-emerald-200/60">
                 <span className="text-sm font-bold text-emerald-800">Net Annual Value</span>
                 <span className="text-lg font-extrabold text-emerald-600 tabular-nums">${(totalValue - censusCost).toLocaleString()}</span>
               </div>
@@ -185,12 +182,12 @@ export default function ROIReport({ data, onBack }) {
           </div>
 
           {/* Payback timeline */}
-          <div className="px-10 py-8 border-b border-zinc-100">
+          <div className="px-5 sm:px-10 py-6 sm:py-8 border-b border-zinc-100">
             <h3 className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-1">Payback Timeline</h3>
-            <p className="text-sm text-zinc-500 mb-6">Cumulative value vs. investment over 12 months</p>
-            <div className="h-64">
+            <p className="text-sm text-zinc-500 mb-5">Cumulative value vs. investment over 12 months</p>
+            <div className="h-52 sm:h-64 -ml-2">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={paybackData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+                <AreaChart data={paybackData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                   <defs>
                     <linearGradient id="valueGrad" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#0D9488" stopOpacity={0.2} />
@@ -198,20 +195,20 @@ export default function ROIReport({ data, onBack }) {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#F4F4F5" vertical={false} />
-                  <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#A1A1AA', fontFamily: 'Inter' }} dy={8} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#A1A1AA', fontFamily: 'Inter' }} dx={-8} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}K`} />
+                  <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#A1A1AA' }} dy={8} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#A1A1AA' }} width={50} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}K`} />
                   <Tooltip
                     contentStyle={{ backgroundColor: '#18181B', border: 'none', borderRadius: '10px', padding: '10px 14px', boxShadow: '0 8px 24px rgba(0,0,0,0.2)' }}
                     labelStyle={{ color: '#A1A1AA', fontSize: 11, fontWeight: 500, marginBottom: 4 }}
                     itemStyle={{ color: '#FAFAFA', fontSize: 13, fontWeight: 600 }}
                     formatter={(v) => [`$${v.toLocaleString()}`, '']}
                   />
-                  <ReferenceLine y={censusCost} stroke="#EF4444" strokeDasharray="6 4" strokeWidth={1.5} label={{ value: `Census: $${censusCost.toLocaleString()}`, position: 'right', fill: '#EF4444', fontSize: 11 }} />
+                  <ReferenceLine y={censusCost} stroke="#EF4444" strokeDasharray="6 4" strokeWidth={1.5} />
                   <Area type="monotone" dataKey="value" stroke="#0D9488" strokeWidth={2.5} fill="url(#valueGrad)" animationDuration={1500} animationEasing="ease-out" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
-            <div className="flex items-center justify-center mt-5">
+            <div className="flex items-center justify-center mt-4">
               <div className="bg-gradient-to-r from-[#0D9488] to-[#10B981] text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-md shadow-teal-200/30">
                 Payback in {paybackDays} days
               </div>
@@ -219,7 +216,7 @@ export default function ROIReport({ data, onBack }) {
           </div>
 
           {/* Use cases */}
-          <div className="px-10 py-8 border-b border-zinc-100">
+          <div className="px-5 sm:px-10 py-6 sm:py-8 border-b border-zinc-100">
             <h3 className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-5">Activated Use Cases</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {selectedCases.map((uc, i) => {
@@ -235,7 +232,7 @@ export default function ROIReport({ data, onBack }) {
                     <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#0D9488]/10 to-[#89F4EA]/15 flex items-center justify-center shrink-0">
                       {Icon && <Icon className="w-4 h-4 text-[#0D9488]" />}
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <p className="text-sm font-semibold text-zinc-900">{uc.label}</p>
                       <p className="text-xs text-zinc-500 leading-relaxed mt-0.5">{uc.description}</p>
                     </div>
@@ -246,25 +243,25 @@ export default function ROIReport({ data, onBack }) {
           </div>
 
           {/* Sensitivity analysis */}
-          <div className="px-10 py-8">
+          <div className="px-5 sm:px-10 py-6 sm:py-8">
             <h3 className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-5">Sensitivity Analysis</h3>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-2 sm:gap-4">
               {['conservative', 'moderate', 'aggressive'].map((s) => {
                 const d = allScenarios[s]
                 const sel = s === scenario
                 return (
                   <div
                     key={s}
-                    className={`rounded-xl border-2 p-5 text-center transition-all ${
+                    className={`rounded-xl border-2 p-3 sm:p-5 text-center transition-all ${
                       sel ? 'border-[#0D9488] bg-gradient-to-b from-[#89F4EA]/8 to-transparent shadow-md shadow-teal-100/20' : 'border-zinc-200'
                     }`}
                   >
-                    <p className={`text-xs font-semibold uppercase tracking-wider capitalize ${sel ? 'text-[#0D9488]' : 'text-zinc-400'}`}>{s}</p>
-                    <p className="text-2xl font-extrabold text-zinc-900 mt-2 tabular-nums">{d.roiRatio.toFixed(1)}<span className="text-zinc-400 text-base">:1</span></p>
-                    <p className="text-xs text-zinc-500 mt-1">${(d.totalValue / 1000).toFixed(0)}K/yr</p>
-                    <p className="text-xs text-zinc-400 mt-0.5">Day {d.paybackDays} payback</p>
+                    <p className={`text-[10px] sm:text-xs font-semibold uppercase tracking-wider capitalize ${sel ? 'text-[#0D9488]' : 'text-zinc-400'}`}>{s}</p>
+                    <p className="text-xl sm:text-2xl font-extrabold text-zinc-900 mt-1.5 sm:mt-2 tabular-nums">{d.roiRatio.toFixed(1)}<span className="text-zinc-400 text-sm sm:text-base">:1</span></p>
+                    <p className="text-[10px] sm:text-xs text-zinc-500 mt-1">${(d.totalValue / 1000).toFixed(0)}K/yr</p>
+                    <p className="text-[10px] text-zinc-400 mt-0.5 hidden sm:block">Day {d.paybackDays} payback</p>
                     {sel && (
-                      <span className="inline-block mt-2.5 text-[10px] font-bold text-[#065F56] bg-[#89F4EA]/20 px-2.5 py-0.5 rounded-full">
+                      <span className="inline-block mt-2 text-[9px] sm:text-[10px] font-bold text-[#065F56] bg-[#89F4EA]/20 px-2 py-0.5 rounded-full">
                         Selected
                       </span>
                     )}
@@ -275,12 +272,13 @@ export default function ROIReport({ data, onBack }) {
           </div>
 
           {/* Footer */}
-          <div className="px-10 py-5 bg-zinc-50 border-t border-zinc-100 flex items-center justify-between">
+          <div className="px-5 sm:px-10 py-5 bg-zinc-50 border-t border-zinc-100 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div className="w-6 h-6 rounded-md bg-gradient-to-br from-[#0D9488] to-[#89F4EA] flex items-center justify-center">
                 <TrendingUp className="w-3 h-3 text-white" />
               </div>
-              <span className="text-xs font-medium text-zinc-400">Generated with ActivateROI · Census</span>
+              <span className="text-xs font-medium text-zinc-400 hidden sm:inline">Generated with ActivateROI · Census</span>
+              <span className="text-xs font-medium text-zinc-400 sm:hidden">ActivateROI</span>
             </div>
             <span className="text-xs text-zinc-400">{today}</span>
           </div>

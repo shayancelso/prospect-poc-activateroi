@@ -80,8 +80,8 @@ export default function ROIBuilder({ onGenerate }) {
 
   return (
     <div data-tour="wizard" className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="h-14 px-8 flex items-center justify-between border-b border-zinc-100 bg-white/80 backdrop-blur-sm sticky top-0 z-10">
+      {/* Header - hidden on mobile (using App mobile bar) */}
+      <header className="hidden lg:flex h-14 px-8 items-center justify-between border-b border-zinc-100 bg-white/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="flex items-center gap-2 text-sm text-zinc-400">
           <span>ROI Builder</span>
           <ChevronRight className="w-3 h-3" />
@@ -94,16 +94,16 @@ export default function ROIBuilder({ onGenerate }) {
       </header>
 
       {/* Step indicator */}
-      <div data-tour="step-indicator" className="flex items-center justify-center gap-1.5 py-7 bg-white border-b border-zinc-50">
+      <div data-tour="step-indicator" className="flex items-center justify-center gap-1 sm:gap-1.5 py-5 sm:py-7 bg-white border-b border-zinc-50 px-4">
         {STEPS.map((s, i) => (
-          <div key={i} className="flex items-center gap-1.5">
+          <div key={i} className="flex items-center gap-1 sm:gap-1.5">
             <button
               onClick={() => i < step && setStep(i)}
-              className="flex items-center gap-2"
+              className="flex items-center gap-1.5"
             >
               <motion.div
                 layout
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-300 ${
+                className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[11px] sm:text-xs font-semibold transition-all duration-300 ${
                   i < step
                     ? 'bg-gradient-to-br from-[#0D9488] to-[#89F4EA] text-white shadow-md shadow-teal-200/30'
                     : i === step
@@ -111,21 +111,21 @@ export default function ROIBuilder({ onGenerate }) {
                     : 'bg-zinc-100 text-zinc-400'
                 }`}
               >
-                {i < step ? <Check className="w-4 h-4" /> : i + 1}
+                {i < step ? <Check className="w-3.5 h-3.5" /> : i + 1}
               </motion.div>
-              <span className={`text-xs font-medium hidden sm:block transition-colors ${i <= step ? 'text-zinc-900' : 'text-zinc-400'}`}>
+              <span className={`text-xs font-medium hidden md:block transition-colors ${i <= step ? 'text-zinc-900' : 'text-zinc-400'}`}>
                 {s.label}
               </span>
             </button>
             {i < STEPS.length - 1 && (
-              <div className={`w-6 lg:w-10 h-0.5 mx-1 rounded-full transition-all duration-500 ${i < step ? 'bg-gradient-to-r from-[#0D9488] to-[#89F4EA]' : 'bg-zinc-200'}`} />
+              <div className={`w-4 sm:w-6 lg:w-10 h-0.5 mx-0.5 sm:mx-1 rounded-full transition-all duration-500 ${i < step ? 'bg-gradient-to-r from-[#0D9488] to-[#89F4EA]' : 'bg-zinc-200'}`} />
             )}
           </div>
         ))}
       </div>
 
       {/* Content */}
-      <div className="flex-1 flex items-start justify-center px-4 py-8">
+      <div className="flex-1 flex items-start justify-center px-4 sm:px-6 py-6 sm:py-8">
         <div className="w-full max-w-2xl">
           <AnimatePresence mode="wait">
             <motion.div
@@ -134,7 +134,7 @@ export default function ROIBuilder({ onGenerate }) {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -24 }}
               transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="bg-white rounded-2xl border border-zinc-200/80 p-8 shadow-sm hover:shadow-md transition-shadow duration-300"
+              className="bg-white rounded-2xl border border-zinc-200/80 p-5 sm:p-8 shadow-sm"
             >
               {step === 0 && <StepProfile profile={profile} setProfile={setProfile} />}
               {step === 1 && <StepUseCases selectedCases={selectedCases} toggleCase={toggleCase} />}
@@ -145,29 +145,29 @@ export default function ROIBuilder({ onGenerate }) {
           </AnimatePresence>
 
           {/* Nav buttons */}
-          <div className="flex items-center justify-between mt-6">
+          <div className="flex items-center justify-between mt-5 sm:mt-6 pb-6">
             <button
               onClick={() => setStep((s) => Math.max(0, s - 1))}
-              className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-150 ${
+              className={`flex items-center gap-1.5 px-3 sm:px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-150 ${
                 step === 0 ? 'invisible' : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700'
               }`}
             >
-              <ChevronLeft className="w-4 h-4" /> Back
+              <ChevronLeft className="w-4 h-4" /> <span className="hidden sm:inline">Back</span>
             </button>
             {step < 4 ? (
               <button
                 onClick={() => setStep((s) => Math.min(4, s + 1))}
                 disabled={!canNext()}
-                className="flex items-center gap-2 px-6 py-2.5 text-sm font-semibold rounded-xl bg-zinc-900 text-white hover:bg-zinc-800 active:scale-[0.98] transition-all duration-150 shadow-sm disabled:opacity-30 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-5 sm:px-6 py-2.5 text-sm font-semibold rounded-xl bg-zinc-900 text-white hover:bg-zinc-800 active:scale-[0.98] transition-all duration-150 shadow-sm disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 Continue <ChevronRight className="w-4 h-4" />
               </button>
             ) : (
               <button
                 onClick={handleGenerate}
-                className="flex items-center gap-2 px-6 py-2.5 text-sm font-semibold rounded-xl bg-gradient-to-r from-[#0D9488] to-[#10B981] text-white hover:shadow-lg hover:shadow-teal-200/40 active:scale-[0.98] transition-all duration-150"
+                className="flex items-center gap-2 px-5 sm:px-6 py-2.5 text-sm font-semibold rounded-xl bg-gradient-to-r from-[#0D9488] to-[#10B981] text-white hover:shadow-lg hover:shadow-teal-200/40 active:scale-[0.98] transition-all duration-150"
               >
-                <Sparkles className="w-4 h-4" /> Generate ROI Report
+                <Sparkles className="w-4 h-4" /> <span className="hidden sm:inline">Generate</span> Report
               </button>
             )}
           </div>
@@ -193,7 +193,7 @@ function StepProfile({ profile, setProfile }) {
           className="w-full rounded-xl border border-zinc-200 h-11 px-4 text-sm placeholder:text-zinc-400 focus:border-[#89F4EA] focus:ring-2 focus:ring-[#89F4EA]/20 outline-none transition-all"
         />
       </Field>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Field label="Industry">
           <Select value={profile.industry} onChange={(v) => set('industry', v)} options={INDUSTRIES} />
         </Field>
@@ -201,7 +201,7 @@ function StepProfile({ profile, setProfile }) {
           <Select value={profile.size} onChange={(v) => set('size', v)} options={COMPANY_SIZES} />
         </Field>
       </div>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Field label="Data Warehouse">
           <Select value={profile.warehouse} onChange={(v) => set('warehouse', v)} options={WAREHOUSES} />
         </Field>
@@ -243,10 +243,10 @@ function StepUseCases({ selectedCases, toggleCase }) {
                 >
                   {sel && <Check className="w-3 h-3 text-white" />}
                 </div>
-                <div>
+                <div className="min-w-0">
                   <p className="text-sm font-medium text-zinc-900 flex items-center gap-2">
-                    {Icon && <Icon className={`w-4 h-4 ${sel ? 'text-[#0D9488]' : 'text-zinc-400'}`} />}
-                    {uc.label}
+                    {Icon && <Icon className={`w-4 h-4 shrink-0 ${sel ? 'text-[#0D9488]' : 'text-zinc-400'}`} />}
+                    <span className="truncate">{uc.label}</span>
                   </p>
                   <p className="text-xs text-zinc-500 mt-1 leading-relaxed">{uc.description}</p>
                 </div>
@@ -270,12 +270,12 @@ function StepPain({ pain, setPain }) {
       <Slider label="Hours per week on manual data exports" value={pain.hoursPerWeek} onChange={(v) => set('hoursPerWeek', v)} min={1} max={40} suffix=" hrs" />
       <Slider label="People involved in manual processes" value={pain.peopleInvolved} onChange={(v) => set('peopleInvolved', v)} min={1} max={20} suffix="" />
       <Field label="Average hourly cost">
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {[50, 75, 100, 125, 150].map((v) => (
             <button
               key={v}
               onClick={() => set('hourlyCost', v)}
-              className={`flex-1 px-3 py-2.5 rounded-xl text-sm font-medium border-2 transition-all ${
+              className={`px-3 py-2.5 rounded-xl text-sm font-medium border-2 transition-all min-w-[56px] ${
                 pain.hourlyCost === v
                   ? 'border-[#0D9488] bg-[#89F4EA]/10 text-[#065F56]'
                   : 'border-zinc-200 text-zinc-600 hover:border-zinc-300'
@@ -287,12 +287,12 @@ function StepPain({ pain, setPain }) {
         </div>
       </Field>
       <Field label="Data quality issue frequency">
-        <div className="flex gap-2">
+        <div className="grid grid-cols-2 sm:flex gap-2">
           {['Daily', 'Weekly', 'Monthly', 'Rarely'].map((v) => (
             <button
               key={v}
               onClick={() => set('dataIssueFrequency', v)}
-              className={`flex-1 px-3 py-2.5 rounded-xl text-sm font-medium border-2 transition-all ${
+              className={`px-3 py-2.5 rounded-xl text-sm font-medium border-2 transition-all sm:flex-1 ${
                 pain.dataIssueFrequency === v
                   ? 'border-[#0D9488] bg-[#89F4EA]/10 text-[#065F56]'
                   : 'border-zinc-200 text-zinc-600 hover:border-zinc-300'
@@ -304,7 +304,7 @@ function StepPain({ pain, setPain }) {
         </div>
       </Field>
       <Slider
-        label="Est. annual revenue lost due to stale/missing data"
+        label="Est. annual revenue lost due to stale data"
         value={pain.revenueLost}
         onChange={(v) => set('revenueLost', v)}
         min={10000}
@@ -319,17 +319,17 @@ function StepPain({ pain, setPain }) {
 
 function StepAssumptions({ scenario, setScenario, computeROI }) {
   const scenarios = [
-    { key: 'conservative', label: 'Conservative', desc: 'Cautious estimates, lower risk' },
-    { key: 'moderate', label: 'Moderate', desc: 'Balanced, most likely outcome' },
-    { key: 'aggressive', label: 'Aggressive', desc: 'Optimistic, high confidence' },
+    { key: 'conservative', label: 'Conservative', desc: 'Cautious estimates' },
+    { key: 'moderate', label: 'Moderate', desc: 'Most likely outcome' },
+    { key: 'aggressive', label: 'Aggressive', desc: 'Optimistic projection' },
   ]
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-lg font-bold text-zinc-900 tracking-tight">Value Assumptions</h2>
-        <p className="text-sm text-zinc-500 mt-1">Choose a scenario based on your confidence in the value projections.</p>
+        <p className="text-sm text-zinc-500 mt-1">Choose a scenario based on your confidence level.</p>
       </div>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         {scenarios.map((s) => {
           const roi = computeROI(s.key)
           const sel = scenario === s.key
@@ -338,7 +338,7 @@ function StepAssumptions({ scenario, setScenario, computeROI }) {
               key={s.key}
               onClick={() => setScenario(s.key)}
               whileTap={{ scale: 0.97 }}
-              className={`rounded-xl border-2 p-5 text-center transition-all duration-200 ${
+              className={`rounded-xl border-2 p-4 sm:p-5 text-center transition-all duration-200 ${
                 sel
                   ? 'border-[#0D9488] bg-gradient-to-b from-[#89F4EA]/10 to-transparent shadow-md shadow-teal-100/30'
                   : 'border-zinc-200 hover:border-zinc-300 hover:shadow-sm'
@@ -348,7 +348,7 @@ function StepAssumptions({ scenario, setScenario, computeROI }) {
               <p className="text-3xl font-extrabold text-zinc-900 mt-2 tabular-nums">{roi.roiRatio.toFixed(1)}<span className="text-lg text-zinc-400">:1</span></p>
               <p className="text-xs text-zinc-500 mt-1">${(roi.totalValue / 1000).toFixed(0)}K/yr</p>
               <p className="text-[11px] text-zinc-400 mt-0.5">Day {roi.paybackDays} payback</p>
-              <p className="text-[10px] text-zinc-400 mt-2">{s.desc}</p>
+              <p className="text-[10px] text-zinc-400 mt-2 hidden sm:block">{s.desc}</p>
             </motion.button>
           )
         })}
@@ -364,9 +364,9 @@ function StepReview({ profile, selectedCases, pain, scenario, computeROI }) {
     <div className="space-y-5">
       <div>
         <h2 className="text-lg font-bold text-zinc-900 tracking-tight">Review & Generate</h2>
-        <p className="text-sm text-zinc-500 mt-1">Confirm the details below, then generate your report.</p>
+        <p className="text-sm text-zinc-500 mt-1">Confirm the details, then generate your report.</p>
       </div>
-      <div className="grid grid-cols-2 gap-3 text-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
         <div className="rounded-xl bg-zinc-50 border border-zinc-100 p-4 space-y-1.5">
           <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">Company</p>
           <p className="font-semibold text-zinc-900">{profile.company}</p>
@@ -392,20 +392,19 @@ function StepReview({ profile, selectedCases, pain, scenario, computeROI }) {
           })}
         </div>
       </div>
-      {/* Hero ROI preview */}
       <div className="rounded-xl bg-gradient-to-r from-[#0D9488] to-[#10B981] p-5 text-white">
-        <div className="grid grid-cols-3 gap-4 text-center">
+        <div className="grid grid-cols-3 gap-3 sm:gap-4 text-center">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-white/60">Total Value</p>
-            <p className="text-2xl font-extrabold tabular-nums mt-1">${(roi.totalValue / 1000).toFixed(0)}K</p>
+            <p className="text-xl sm:text-2xl font-extrabold tabular-nums mt-1">${(roi.totalValue / 1000).toFixed(0)}K</p>
           </div>
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-white/60">ROI Ratio</p>
-            <p className="text-2xl font-extrabold tabular-nums mt-1">{roi.roiRatio.toFixed(1)}:1</p>
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-white/60">ROI</p>
+            <p className="text-xl sm:text-2xl font-extrabold tabular-nums mt-1">{roi.roiRatio.toFixed(1)}:1</p>
           </div>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-white/60">Payback</p>
-            <p className="text-2xl font-extrabold tabular-nums mt-1">Day {roi.paybackDays}</p>
+            <p className="text-xl sm:text-2xl font-extrabold tabular-nums mt-1">Day {roi.paybackDays}</p>
           </div>
         </div>
       </div>
@@ -413,7 +412,6 @@ function StepReview({ profile, selectedCases, pain, scenario, computeROI }) {
   )
 }
 
-// Shared components
 function Field({ label, children }) {
   return (
     <div className="space-y-2">
@@ -442,9 +440,9 @@ function Slider({ label, value, onChange, min, max, step = 1, prefix = '', suffi
   const pct = ((value - min) / (max - min)) * 100
   return (
     <div className="space-y-3">
-      <div className="flex justify-between items-baseline">
+      <div className="flex justify-between items-baseline gap-2">
         <label className="text-sm font-medium text-zinc-700">{label}</label>
-        <span className="text-sm font-bold text-[#0D9488] tabular-nums">
+        <span className="text-sm font-bold text-[#0D9488] tabular-nums whitespace-nowrap">
           {prefix}{display}{suffix}
         </span>
       </div>
